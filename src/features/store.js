@@ -1,12 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import productReducer from "./product/productSlice";
 import gridReducer from "./grid/gridSlice";
 
-const rootReducer = {
+const rootReducer = combineReducers({
   product: productReducer,
   grid: gridReducer,
-};
-
-export default configureStore({
-  reducer: rootReducer,
 });
+
+const store = configureStore({
+  reducer: persistReducer({ key: "root", storage }, rootReducer),
+});
+
+const persistor = persistStore(store);
+
+export { store, persistor };

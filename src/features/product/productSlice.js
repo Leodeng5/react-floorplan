@@ -9,7 +9,7 @@ const productSlice = createSlice({
   initialState: productAdapter.getInitialState(),
   reducers: {
     initializeProducts: (state, action) => {
-      productAdapter.setAll(state, action.payload);
+      productAdapter.addMany(state, action.payload);
     },
     toggleUnmask: (state, action) => {
       productAdapter.updateOne(state, {
