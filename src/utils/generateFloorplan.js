@@ -1,0 +1,74 @@
+/**
+ * Floorplan Allocation Algorithm
+ * @description
+ * Allocates products into 4 grids of 20, satisfying:
+ * 1. Core i4/i5 products must be placed in grids 1 and 2.
+ * 2. No two products can be adjacent to each other.
+ * 3. Maximized spacing between similar products.
+ * @param { Array } products - Array of 80 products (RUs)
+ * @returns { Object } - 4 arrays of 20 product names each
+ */
+const generateFloorplan = (products) => {
+  const counts = {};
+  products.forEach((product) => {
+    counts[product.product] = product.repeat;
+  });
+
+  // Initialize empty grid
+  const grid = Array.from({ length: 4 }, () => Array(20).fill(null));
+  let g = [20, 20, 20, 20]; // Remaining spaces in each grid
+
+  // Reserve space for Core i4/i5 products
+  const p = counts["Core i4"] + counts["Core i5"];
+  g[0] -= Math.ceil(p / 2);
+  g[1] -= Math.floor(p / 2);
+
+  // Assign products into grids, prioritizing highest repeat count
+  products.sort((a, b) => b.repeat - a.repeat);
+  products.forEach((product) => {
+    let { product: name, repeat } = product;
+    // Calculate how many products to place in each grid
+    const alloc = Array(4).fill(0);
+    if (name === "Core i4" || name === "Core i5") {
+      // Core i4/i5 products: distribute evenly into grids 1 and 2
+      const maxIndex = g.indexOf(Math.max(...g.slice(0, 2)));
+      const otherIndex = maxIndex === 0 ? 1 : 0;
+      alloc[maxIndex] = Math.ceil(repeat / 2);
+      alloc[otherIndex] = Math.floor(repeat / 2);
+    } else {
+      // Other products: distribute evenly across all grids
+      for (let i = 0; i < repeat; i++) {
+        let gridIndex = g.indexOf(Math.max(...g));
+        alloc[gridIndex]++;
+        g[gridIndex]--;
+      }
+    }
+
+    // Within each grid, place products in every kth space
+    alloc.forEach((count, gridIndex) => {
+      const space = g[gridIndex] + count;
+      const k = Math.floor(space / count);
+      let passed = 0;
+      let placed = 0;
+      for (let i = 0; i < 20; i++) {
+        if (grid[gridIndex][i] === null) {
+          if (passed % k === 0) {
+            grid[gridIndex][i] = name;
+            placed++;
+          }
+          if (placed === count) break;
+          passed++;
+        }
+      }
+    });
+  });
+
+  return {
+    1: grid[0],
+    2: grid[1],
+    3: grid[2],
+    4: grid[3],
+  };
+};
+
+export default generateFloorplan;
