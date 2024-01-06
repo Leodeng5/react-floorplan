@@ -7,6 +7,15 @@ import {
 import { isLight } from "../../utils/generateColors";
 import "./index.css";
 
+/**
+ * Renders a row for a product in the floorplan.
+ *
+ * @component
+ * @param {number} props.ru - The rack unit of the product.
+ * @param {boolean} props.inverted - Indicates if the row is inverted.
+ * @param {string} props.productId - The product name.
+ * @returns {JSX.Element|null} The rendered product row.
+ */
 const ProductRow = ({ ru, inverted, productId }) => {
   const dispatch = useDispatch();
   const product = useSelector((state) => createSelectProduct(productId)(state));
@@ -45,7 +54,6 @@ const ProductRow = ({ ru, inverted, productId }) => {
         onClick={() => dispatch(toggleUnmask(productId))}
         color={unmask ? "yellow" : undefined}
       />
-
       <DataCell data={ru} />
       <ProductCell product={product.product} color={color} />
     </>

@@ -1,12 +1,13 @@
 /**
- * Floorplan Allocation Algorithm
+ * Floorplan Generation Algorithm
+ * -----------------------------
  * @description
- * Allocates products into 4 grids of 20, satisfying:
+ * Given an array of 80 products (RUs), generate a floorplan that satisfies the following constraints:
  * 1. Core i4/i5 products must be placed in grids 1 and 2.
  * 2. No two products can be adjacent to each other.
  * 3. Maximized spacing between similar products.
- * @param { Array } products - Array of 80 products (RUs)
- * @returns { Object } - 4 arrays of 20 product names each
+ * @param {Array} products - The array of 80 products (RUs).
+ * @returns {Object} - The generated floorplan (4 arrays of 20 product names each).
  */
 const generateFloorplan = (products) => {
   const counts = {};

@@ -5,9 +5,15 @@ import { getProductColor } from "../../utils/generateColors";
 import GridSection from "./GridSection";
 import products from "../../data/dataset.json";
 
+/**
+ * Renders the Floorplan component.
+ * 
+ * @returns {JSX.Element}
+ */
 const Floorplan = () => {
   const dispatch = useDispatch();
 
+  // Initialize the products in the store
   useEffect(() => {
     dispatch(initializeProducts(products.map((p) => ({
       product: p.product,

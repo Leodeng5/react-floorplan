@@ -5,6 +5,13 @@ import { getProductColor, isLight } from "../../utils/generateColors";
 import ProductRow from "./ProductRow";
 import "./index.css";
 
+/**
+ * Renders a grid section component (upper or lower half of the floorplan).
+ *
+ * @component
+ * @param {number} props.sectionNo 1 for upper half, 2 for lower half.
+ * @returns {JSX.Element} The grid section component.
+ */
 const GridSection = ({ sectionNo }) => {
   const addIoColumn = sectionNo == 1 ? true : false;
   const leftGridNo = (sectionNo - 1) * 2 + 1;
