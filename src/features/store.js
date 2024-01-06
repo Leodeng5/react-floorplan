@@ -10,7 +10,10 @@ const rootReducer = combineReducers({
 });
 
 const store = configureStore({
-  reducer: persistReducer({ key: "root", storage }, rootReducer),
+  reducer: persistReducer(
+    { key: "root", storage, blacklist: ["grid"] },
+    rootReducer
+  ),
 });
 
 const persistor = persistStore(store);
