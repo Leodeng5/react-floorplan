@@ -9,10 +9,11 @@
     "react-redux": "^9.0.4",
     "react-scripts": "5.0.1",
     "redux-persist": "^6.0.0",
-    "nth-check": ">=2.0.1"
+    "nth-check": "2.1.1"
   },
   "devDependencies": {
-    "eslint": "^8"
+    "eslint": "^8",
+    "nth-check": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start"
