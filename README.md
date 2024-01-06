@@ -1,4 +1,4 @@
-# Intel Full Stack Assessment: Floorplan
+# Floorplan: Rack Unit Table
 
 ReactJS based application to render a floorplan (Rack Unit Table) based on a JSON dataset.
 
