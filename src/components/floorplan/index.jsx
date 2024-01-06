@@ -11,7 +11,6 @@ const Floorplan = () => {
   useEffect(() => {
     dispatch(initializeProducts(products.map((p) => ({
       product: p.product,
-      repeat: p.repeat,
       unmask: false,
       color: getProductColor(p.product),
     }))));
