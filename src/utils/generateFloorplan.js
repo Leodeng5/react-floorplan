@@ -21,8 +21,9 @@ const generateFloorplan = (products) => {
 
   // Reserve space for Core i4/i5 products
   const p = counts["Core i4"] + counts["Core i5"];
-  g[0] -= Math.ceil(p / 2);
-  g[1] -= Math.floor(p / 2);
+  const pAlloc = [Math.ceil(p / 2), Math.floor(p / 2)];
+  g[0] -= pAlloc[0];
+  g[1] -= pAlloc[1];
 
   // Assign products into grids, prioritizing highest repeat count
   products.sort((a, b) => b.repeat - a.repeat);
@@ -32,10 +33,12 @@ const generateFloorplan = (products) => {
     const alloc = Array(4).fill(0);
     if (name === "Core i4" || name === "Core i5") {
       // Core i4/i5 products: distribute evenly into grids 1 and 2
-      const maxIndex = g.indexOf(Math.max(...g.slice(0, 2)));
+      const maxIndex = pAlloc.indexOf(Math.max(...pAlloc));
       const otherIndex = maxIndex === 0 ? 1 : 0;
       alloc[maxIndex] = Math.ceil(repeat / 2);
       alloc[otherIndex] = Math.floor(repeat / 2);
+      pAlloc[0] -= alloc[0];
+      pAlloc[1] -= alloc[1];
     } else {
       // Other products: distribute evenly across all grids
       for (let i = 0; i < repeat; i++) {
@@ -52,12 +55,12 @@ const generateFloorplan = (products) => {
       let passed = 0;
       let placed = 0;
       for (let i = 0; i < 20; i++) {
+        if (placed === count) break;
         if (grid[gridIndex][i] === null) {
           if (passed % k === 0) {
             grid[gridIndex][i] = name;
             placed++;
           }
-          if (placed === count) break;
           passed++;
         }
       }
