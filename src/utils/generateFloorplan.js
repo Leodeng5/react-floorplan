@@ -27,6 +27,7 @@ const generateFloorplan = (products) => {
 
   // Assign products into grids, prioritizing highest repeat count
   products.sort((a, b) => b.repeat - a.repeat);
+  const assigned = [[], [], [], []];
   products.forEach((product) => {
     let { product: name, repeat } = product;
     // Calculate how many products to place in each grid
@@ -48,19 +49,32 @@ const generateFloorplan = (products) => {
       }
     }
 
-    // Within each grid, place products in every kth space
-    alloc.forEach((count, gridIndex) => {
+    for (let i = 0; i < 4; i++) {
+      assigned[i].push({ name, count: alloc[i] });
+    }
+  });
+
+  for (let i = 0; i < 4; i++) {
+    assigned[i].sort((a, b) => b.count - a.count);
+  }
+  g = [20, 20, 20, 20]; // Remaining spaces in each grid
+  // Place products into grids
+  assigned.forEach((products, gridIndex) => {
+    products.forEach((product) => {
+      const { name, count } = product;
       if (count === 0) return;
       // Place first product
       const x = grid[gridIndex].indexOf(null);
       grid[gridIndex][x] = name;
-      count--;
-      if (count === 0) return;
+      if (count === 1) {
+        g[gridIndex]--;
+        return;
+      }
       // Place remaining products
-      const space = g[gridIndex] + count;
-      const k = Math.floor(space / count);
+      const space = g[gridIndex] - 1;
+      const k = Math.floor(space / (count - 1));
       let passed = 0;
-      let placed = 0;
+      let placed = 1;
       for (let i = x + 1; i < 20; i++) {
         if (placed === count) break;
         if (grid[gridIndex][i] === null) {
@@ -71,6 +85,7 @@ const generateFloorplan = (products) => {
           passed++;
         }
       }
+      g[gridIndex] -= count;
     });
   });
 
