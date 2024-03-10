@@ -1,0 +1,30 @@
+[
+  {
+    "product": "Core i4",
+    "repeat": 3
+  },
+  {
+    "product": "Core i5",
+    "repeat": 3
+  },
+  {
+    "product": "Core i1",
+    "repeat": 27
+  },
+  {
+    "product": "Core i2",
+    "repeat": 27
+  },
+  {
+    "product": "Core i3",
+    "repeat": 9
+  },
+  {
+    "product": "Core i6",
+    "repeat": 6
+  },
+  {
+    "product": "Core i7",
+    "repeat": 5
+  }
+]

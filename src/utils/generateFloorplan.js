@@ -50,14 +50,21 @@ const generateFloorplan = (products) => {
 
     // Within each grid, place products in every kth space
     alloc.forEach((count, gridIndex) => {
+      if (count === 0) return;
+      // Place first product
+      const x = grid[gridIndex].indexOf(null);
+      grid[gridIndex][x] = name;
+      count--;
+      if (count === 0) return;
+      // Place remaining products
       const space = g[gridIndex] + count;
       const k = Math.floor(space / count);
       let passed = 0;
       let placed = 0;
-      for (let i = 0; i < 20; i++) {
+      for (let i = x + 1; i < 20; i++) {
         if (placed === count) break;
         if (grid[gridIndex][i] === null) {
-          if (passed % k === 0) {
+          if (passed % k === k - 1) {
             grid[gridIndex][i] = name;
             placed++;
           }
