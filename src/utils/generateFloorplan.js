@@ -1,3 +1,7 @@
+import { MaxHeap } from "@datastructures-js/heap";
+
+const pHeap = () => new MaxHeap((p) => p.count);
+
 /**
  * Floorplan Generation Algorithm
  * -----------------------------
@@ -27,7 +31,7 @@ const generateFloorplan = (products) => {
 
   // Assign products into grids, prioritizing highest repeat count
   products.sort((a, b) => b.repeat - a.repeat);
-  const assigned = [[], [], [], []];
+  const assigned = [pHeap(), pHeap(), pHeap(), pHeap()];
   products.forEach((product) => {
     let { product: name, repeat } = product;
     // Calculate how many products to place in each grid
@@ -50,43 +54,25 @@ const generateFloorplan = (products) => {
     }
 
     for (let i = 0; i < 4; i++) {
-      assigned[i].push({ name, count: alloc[i] });
+      assigned[i].push({ count: alloc[i], name });
     }
   });
 
-  for (let i = 0; i < 4; i++) {
-    assigned[i].sort((a, b) => b.count - a.count);
-  }
-  g = [20, 20, 20, 20]; // Remaining spaces in each grid
   // Place products into grids
   assigned.forEach((products, gridIndex) => {
-    products.forEach((product) => {
-      const { name, count } = product;
-      if (count === 0) return;
-      // Place first product
-      const x = grid[gridIndex].indexOf(null);
-      grid[gridIndex][x] = name;
-      if (count === 1) {
-        g[gridIndex]--;
-        return;
+    // Round robin, prioritizing highest count
+    let i = 0;
+    let prev = null;
+    while (i < 20) {
+      const product = products.pop();
+      grid[gridIndex][i] = product.name;
+      product.count--;
+      if (prev) {
+        products.push(prev);
       }
-      // Place remaining products
-      const space = g[gridIndex] - 1;
-      const k = Math.floor(space / (count - 1));
-      let passed = 0;
-      let placed = 1;
-      for (let i = x + 1; i < 20; i++) {
-        if (placed === count) break;
-        if (grid[gridIndex][i] === null) {
-          if (passed % k === k - 1) {
-            grid[gridIndex][i] = name;
-            placed++;
-          }
-          passed++;
-        }
-      }
-      g[gridIndex] -= count;
-    });
+      prev = product;
+      i++;
+    }
   });
 
   return {
