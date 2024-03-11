@@ -4,6 +4,7 @@ import {
   createSelectProduct,
   toggleUnmask,
 } from "../../features/product/productSlice";
+import { setSource, setTarget, swapProducts } from "../../features/grid/gridSlice";
 import { isLight } from "../../utils/generateColors";
 import "./index.css";
 
@@ -20,6 +21,51 @@ const ProductRow = ({ ru, inverted, productId }) => {
   const dispatch = useDispatch();
   const product = useSelector((state) => createSelectProduct(productId)(state));
   const [diode, setDiode] = useState(false);
+
+  const handleSetSource = () => {
+    dispatch(setSource(ru));
+  };
+  const handleSetTarget = () => {
+    dispatch(setTarget(ru));
+  };
+  const handleClearTarget = () => {
+    dispatch(setTarget(null));
+  };
+  const handleSwap = () => {
+    dispatch(swapProducts());
+  };
+
+  const ProductCell = ({ product, color }) => {
+    return (
+      <td
+        className="productCell"
+        style={{
+          backgroundColor: color,
+          color: isLight(color) ? "black" : "white",
+        }}
+        draggable
+        onDragOver={(e) => e.preventDefault()}
+        onDragStart={(e) => {
+          e.target.style.boxShadow = "0 0 10px 5px white inset";
+          handleSetSource();
+        }}
+        onDragEnter={(e) => {
+          e.target.style.boxShadow = "0 0 10px 5px yellow inset";
+          handleSetTarget();
+        }}
+        onDragLeave={(e) => {
+          e.target.style.boxShadow = "";
+          handleClearTarget();
+        }}
+        onDragEnd={(e) => {
+          e.target.style.boxShadow = "";
+          handleSwap();
+        }}
+      >
+        {product}
+      </td>
+    );
+  };
 
   if (!product) {
     return null;
@@ -68,20 +114,6 @@ const DataCell = ({ data, color, onClick }) => {
       onClick={onClick}
     >
       {data}
-    </td>
-  );
-};
-
-const ProductCell = ({ product, color }) => {
-  return (
-    <td
-      className="productCell"
-      style={{
-        backgroundColor: color,
-        color: isLight(color) ? "black" : "white",
-      }}
-    >
-      {product}
     </td>
   );
 };
